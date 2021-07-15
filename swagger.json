@@ -1,0 +1,1275 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "FreeCodingSchool API",
+    "description": "Acquisition API powers the new-customer registration process."
+  },
+  "host": "localhost:4044",
+  "basePath": "/api",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/healthcheck": {
+      "get": {
+        "tags": [
+          "Healthcheck"
+        ],
+        "description": "Healthcheck",
+        "summary": "Check the health of API",
+        "responses": {
+          "200": {
+            "description": "Successful Response with 0 or more Products"
+          }
+        }
+      }
+    },
+    "/serviceability": {
+      "post": {
+        "tags": [
+          "Serviceability"
+        ],
+        "description": "Once the potential customer's address has been reconciled, it may be passed using this action to check serviceability at the provided location. If the location is not serviceable but will be in the future, the response will contain a date for future service availability.",
+        "summary": "Check the location serviceability of a customer",
+        "parameters": [
+          {
+            "name": "location",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NewCustomerAddress"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response with 0 or more Products",
+            "schema": {
+              "$ref": "#/definitions/LocationServiceabilityResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid Request"
+          }
+        }
+      }
+    },
+    "/v2/serviceability": {
+      "post": {
+        "tags": [
+          "Serviceability"
+        ],
+        "description": "Once the potential customer's address has been reconciled, it may be passed using this action to check serviceability at the provided location. If the location is not serviceable but will be in the future, the response will contain a date for future service availability.",
+        "summary": "Check the location serviceability of a customer",
+        "parameters": [
+          {
+            "name": "location",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NewCustomerAddress"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response with 0 or more Products",
+            "schema": {
+              "$ref": "#/definitions/LocationServiceabilityResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid Request"
+          }
+        }
+      }
+    },
+    "/available-products": {
+      "post": {
+        "tags": [
+          "Product"
+        ],
+        "description": "Once the potential customer's address has been reconciled, it may be passed using this action to retrieve a list of products available at the location. The location may not be serviceable in which case an empty list of products will be returned.",
+        "summary": "List All Products Available to Customer",
+        "parameters": [
+          {
+            "name": "location",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NewCustomerAddress"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response with 0 or more Products",
+            "schema": {
+              "$ref": "#/definitions/ServiceabilityResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "406": {
+            "description": "Not Acceptable: errorCode: CF001 returned if underlying system returns products, but ones not supported by the API",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/installation-schedule": {
+      "get": {
+        "tags": [
+          "Installation"
+        ],
+        "description": "Given a service address and products this will return available installation dates and times.",
+        "summary": "List Installation Date and Time Windows",
+        "parameters": [
+          {
+            "$ref": "#/parameters/QuoteIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ProductIdParameter"
+          },
+          {
+            "$ref": "#/parameters/AfterTimestamp"
+          },
+          {
+            "$ref": "#/parameters/Limit"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "schema": {
+              "$ref": "#/definitions/PaginatedSchedule"
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Invalid Request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/order-submission": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "description": "This action will create an order from the specified quote",
+        "summary": "Create order from quote",
+        "parameters": [
+          {
+            "name": "order submission",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/OrderSubmissionRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Order Created",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "confirmationNumber": {
+                  "description": "Order Confirmation Number",
+                  "type": "string",
+                  "example": "0123456"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Request"
+          },
+          "422": {
+            "description": "Unprocessable"
+          }
+        }
+      }
+    },
+    "/quotes/{quoteId}": {
+      "get": {
+        "tags": [
+          "Quote"
+        ],
+        "description": "This will retrieve an existing quote containing the current order summary",
+        "summary": "Retrieve an existing quote",
+        "parameters": [
+          {
+            "$ref": "#/parameters/QuoteId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Quote Successfully Retrieved",
+            "schema": {
+              "$ref": "#/definitions/QuoteResponse"
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Quote"
+        ],
+        "description": "Update selected products or address on existing quote",
+        "summary": "Update an existing quote",
+        "parameters": [
+          {
+            "$ref": "#/parameters/QuoteId"
+          },
+          {
+            "name": "quote",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/QuoteUpdateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Invalid Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/prospects": {
+      "post": {
+        "tags": [
+          "Prospect"
+        ],
+        "description": "Creates a prospective customer address record",
+        "summary": "Creates a prospective customer address record",
+        "parameters": [
+          {
+            "name": "prospect",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ProspectiveCustomerRecord"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Prospect Created",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "description": "Prospect Identifier",
+                  "type": "string",
+                  "example": "12345"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Request"
+          }
+        }
+      }
+    },
+    "/prospects/{prospectId}": {
+      "get": {
+        "tags": [
+          "Prospect"
+        ],
+        "description": "This will retrieve an existing prospect for the given prospectid",
+        "summary": "Retrieve an existing prospect",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ProspectId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Prospect Successfully Retrieved",
+            "schema": {
+              "$ref": "#/definitions/ProspectResponse"
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Prospect"
+        ],
+        "description": "Update selected prospect on existing prospect",
+        "summary": "Update an existing prospect",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ProspectId"
+          },
+          {
+            "name": "prospect",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ProspectiveAddressRecord"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Invalid Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/prospects/{prospectId}/verification": {
+      "post": {
+        "tags": [
+          "Verification"
+        ],
+        "description": "Verify notification code",
+        "summary": "Verify notification code",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ProspectId"
+          },
+          {
+            "name": "code required",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Code"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Invalid Request"
+          },
+          "422": {
+            "description": "Unprocessable",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/v2/prospects/{prospectId}/verification": {
+      "post": {
+        "tags": [
+          "Verification"
+        ],
+        "description": "Verify notification code",
+        "summary": "Verify notification code",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ProspectId"
+          },
+          {
+            "name": "code required",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Code"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Invalid Request"
+          },
+          "422": {
+            "description": "Unprocessable",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/prospects/{prospectId}/notification-tokens": {
+      "post": {
+        "tags": [
+          "Verification"
+        ],
+        "description": "Send verification code",
+        "summary": "Send verification code",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ProspectId"
+          },
+          {
+            "$ref": "#/parameters/Channel"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Invalid Request"
+          },
+          "422": {
+            "description": "Unprocessable",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/fiber-products": {
+      "post": {
+        "tags": [
+          "Fiber Product"
+        ],
+        "description": "Once the potential customer's address has been reconciled, it may be passed using this action to retrieve a list of fiber products available at the location.",
+        "summary": "List Available Fiber Products",
+        "parameters": [
+          {
+            "name": "location",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NewCustomerAddress"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response with 0 or more Products",
+            "schema": {
+              "$ref": "#/definitions/FiberProduct"
+            }
+          },
+          "400": {
+            "description": "Invalid Request"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "NewCustomerAddress": {
+      "title": "Potential Customer's Address",
+      "type": "object",
+      "properties": {
+        "address": {
+          "description": "Street number and name",
+          "type": "string",
+          "x-example": "1234 Elm St."
+        },
+        "address2": {
+          "description": "Address Line 2 - Apartment, suite, etc.",
+          "type": "string",
+          "x-example": "#201"
+        },
+        "city": {
+          "description": "City",
+          "type": "string",
+          "x-example": "Everett"
+        },
+        "state": {
+          "description": "State",
+          "type": "string",
+          "x-example": "WA"
+        },
+        "postalCode": {
+          "description": "State",
+          "type": "string",
+          "x-example": "98201"
+        },
+        "isBusiness": {
+          "description": "A flag which indicates whether or not this is a business address",
+          "type": "boolean",
+          "x-example": true
+        }
+      },
+      "required": [
+        "address",
+        "city",
+        "state",
+        "postalCode"
+      ]
+    },
+    "Code": {
+      "title": "Prospect Code",
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "Code to verify the prospect",
+          "type": "string",
+          "x-example": 12145551234
+        },
+        "token": {
+          "description": "Token to verify the prospect",
+          "type": "string",
+          "x-example": "ksbfid"
+        }
+      },
+      "required": [
+        "code",
+        "token"
+      ]
+    },
+    "LocationServiceabilityResponse": {
+      "title": "Serviceability Response",
+      "type": "object",
+      "properties": {
+        "isServiceable": {
+          "description": "A flag to determine whether or not this location is serviceable",
+          "type": "boolean",
+          "x-example": true
+        },
+        "hasExistingService": {
+          "description": "A flag to determine whether or not this location already has service",
+          "type": "boolean",
+          "x-example": true
+        },
+        "hasFiberService": {
+          "description": "A flag to determine whether or not this location already has fiber service",
+          "type": "boolean",
+          "x-example": true
+        },
+        "isFiberAvailable": {
+          "description": "A flag to determine whether or not this location has fiber products available",
+          "type": "boolean",
+          "x-example": true
+        },
+        "futureServiceDate": {
+          "description": "Date of future service.",
+          "type": "string",
+          "format": "date-time",
+          "x-example": "2019-08-24T14:15:22Z"
+        }
+      },
+      "required": [
+        "isServiceable",
+        "hasExistingService",
+        "hasFiberService",
+        "isFiberAvailable"
+      ]
+    },
+    "ServiceabilityResponse": {
+      "title": "Serviceability Response",
+      "type": "object",
+      "properties": {
+        "quoteId": {
+          "type": "string",
+          "x-example": 12345
+        },
+        "products": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Product"
+          }
+        }
+      },
+      "required": [
+        "quoteId",
+        "products"
+      ]
+    },
+    "Product": {
+      "title": "Product",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Internal Product Identifier",
+          "type": "string",
+          "x-example": "12564378"
+        },
+        "name": {
+          "description": "Internal Product Description",
+          "type": "string",
+          "x-example": "Frontier Gig"
+        },
+        "type": {
+          "description": "Product Type",
+          "type": "string",
+          "x-example": "INTERNET",
+          "enum": [
+            "INTERNET",
+            "PHONE",
+            "VOICE"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "type"
+      ]
+    },
+    "FiberProduct": {
+      "title": "Product",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Internal Product Identifier",
+          "type": "string",
+          "x-example": "12564378"
+        },
+        "name": {
+          "description": "Internal Product name",
+          "type": "string",
+          "x-example": "Frontier Fiber Optic"
+        },
+        "description": {
+          "description": "Internal Product Description",
+          "type": "string",
+          "x-example": "Frontier Fiber Optic Gig"
+        },
+        "price": {
+          "description": "Cost for this product",
+          "$ref": "#/definitions/Cost"
+        },
+        "upstream": {
+          "description": "Upstream Speed",
+          "type": "string",
+          "x-example": "1 gb"
+        },
+        "downstream": {
+          "description": "Downstream Speed",
+          "type": "string",
+          "x-example": "1 gb"
+        },
+        "metadata": {
+          "description": "List of product metadata",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description",
+        "price",
+        "upstream",
+        "downstream"
+      ]
+    },
+    "NewServiceInquiry": {
+      "title": "Product Configuration",
+      "type": "object",
+      "properties": {
+        "productIds": {
+          "description": "List of Product Identifiers",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "serviceLocation": {
+          "$ref": "#/definitions/NewCustomerAddress"
+        }
+      }
+    },
+    "InstallationSchedule": {
+      "title": "Installation Schedule",
+      "type": "object",
+      "properties": {
+        "date": {
+          "description": "Available Installation Date",
+          "type": "string",
+          "format": "date"
+        },
+        "windows": {
+          "description": "List of Available Installation Times",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/InstallationWindow"
+          }
+        }
+      }
+    },
+    "InstallationWindow": {
+      "title": "Intallation Window",
+      "type": "object",
+      "properties": {
+        "start": {
+          "description": "Planned Starting Time of Installation",
+          "type": "string",
+          "format": "date-time"
+        },
+        "end": {
+          "description": "Planned Completion Time of Installation",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "Cost": {
+      "title": "Cost",
+      "type": "object",
+      "properties": {
+        "value": {
+          "description": "Monetary Value",
+          "type": "string",
+          "x-example": "15.00"
+        },
+        "currency": {
+          "description": "Currency Type",
+          "type": "string",
+          "enum": [
+            "USD"
+          ]
+        },
+        "unit": {
+          "description": "Billing Unit",
+          "type": "string",
+          "enum": [
+            "MONTHLY",
+            "YEARLY",
+            "ONE_TIME"
+          ]
+        }
+      }
+    },
+    "OrderSummary": {
+      "title": "Order Summary",
+      "type": "object",
+      "properties": {
+        "total": {
+          "$ref": "#/definitions/Cost"
+        },
+        "lineItems": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "product": {
+                "$ref": "#/definitions/Product"
+              },
+              "cost": {
+                "$ref": "#/definitions/Cost"
+              }
+            }
+          }
+        },
+        "additionalFees": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "FEE",
+                  "TAX"
+                ]
+              },
+              "cost": {
+                "$ref": "#/definitions/Cost"
+              }
+            }
+          }
+        }
+      }
+    },
+    "InquiryResponse": {
+      "title": "Inquiry Response",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Inquiry Identifier",
+          "type": "string",
+          "x-example": "156721"
+        },
+        "summary": {
+          "$ref": "#/definitions/OrderSummary"
+        },
+        "installationSchedule": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/InstallationSchedule"
+          }
+        }
+      }
+    },
+    "QuoteUpdateRequest": {
+      "title": "Product Configuration",
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "description": "Customer's First Name",
+          "type": "string",
+          "x-example": "Jane"
+        },
+        "lastName": {
+          "description": "Customer's Last Name",
+          "type": "string",
+          "x-example": "Doe"
+        },
+        "mobileNumber": {
+          "description": "Customer's Mobile Number",
+          "type": "string",
+          "x-example": "12145551234"
+        },
+        "email": {
+          "description": "Customer's Email Address",
+          "type": "string",
+          "format": "email",
+          "x-example": "jane.doe@gmail.com"
+        },
+        "productIds": {
+          "description": "List of Product Identifiers",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "serviceLocation": {
+          "$ref": "#/definitions/NewCustomerAddress"
+        },
+        "notificationPreferences": {
+          "$ref": "#/definitions/NotificationPreferences"
+        }
+      },
+      "required": [
+        "firstName",
+        "lastName",
+        "mobileNumber",
+        "email",
+        "productIds",
+        "serviceLocation"
+      ]
+    },
+    "NotificationPreferences": {
+      "title": "Notification preferences",
+      "type": "object",
+      "properties": {
+        "alternateMobileNumber": {
+          "description": "Alternate Mobile Number where Schedule and Order Updates will be sent",
+          "type": "string",
+          "x-example": "12145551234"
+        },
+        "installationScheduleUpdatesEnabled": {
+          "description": "A flag to determine whether or not to send new installation time availablilities to this user",
+          "type": "boolean",
+          "x-example": true
+        },
+        "marketingEmailEnabled": {
+          "description": "A flag to determine whether or not to send marketing emails to this user",
+          "type": "boolean",
+          "x-example": true
+        },
+        "alternateMailingAddress": {
+          "$ref": "#/definitions/NewCustomerAddress"
+        }
+      }
+    },
+    "QuoteResponse": {
+      "title": "Quote Response",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Quote Identifier",
+          "type": "string",
+          "x-example": "156721"
+        },
+        "firstName": {
+          "description": "Customer's First Name",
+          "type": "string",
+          "x-example": "Jane"
+        },
+        "lastName": {
+          "description": "Customer's Last Name",
+          "type": "string",
+          "x-example": "Doe"
+        },
+        "mobileNumber": {
+          "description": "Customer's Mobile Number",
+          "type": "string",
+          "x-example": 12145551234
+        },
+        "email": {
+          "description": "Customer's Email Address",
+          "type": "string",
+          "format": "email",
+          "x-example": "jane.doe@gmail.com"
+        },
+        "summary": {
+          "$ref": "#/definitions/OrderSummary"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "PaymentMethod": {
+      "title": "Payment Method",
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "Payment Method Type",
+          "type": "string",
+          "enum": [
+            "BANK_ACCOUNT",
+            "CREDIT_CARD"
+          ]
+        },
+        "tokenizedPayment": {
+          "description": "Tokenized Payment Information",
+          "type": "string",
+          "x-example": "AFSNJKN1828903SJNSSKJNJ"
+        },
+        "autopayEnabled": {
+          "description": "Auto Payment Enrollment Flag",
+          "type": "boolean",
+          "x-example": true
+        },
+        "paperlessBillingEnabled": {
+          "description": "Paperless Billing Flag",
+          "type": "boolean",
+          "x-example": true
+        },
+        "alternateBillingAddress": {
+          "$ref": "#/definitions/NewCustomerAddress"
+        }
+      },
+      "required": [
+        "type",
+        "tokenizedPayment",
+        "autopayEnabled",
+        "paperlessBillingEnabled"
+      ]
+    },
+    "OrderSubmissionRequest": {
+      "title": "Order Submission Request",
+      "type": "object",
+      "properties": {
+        "quoteId": {
+          "type": "string",
+          "x-example": "156721"
+        },
+        "preferredInstallTime": {
+          "$ref": "#/definitions/InstallationWindow"
+        },
+        "paymentMethod": {
+          "$ref": "#/definitions/PaymentMethod"
+        }
+      },
+      "required": [
+        "quoteId",
+        "preferredInstallTime"
+      ]
+    },
+    "PaginatedSchedule": {
+      "title": "Paginated Response",
+      "type": "object",
+      "properties": {
+        "lastDateTimeStamp": {
+          "description": "Last available date's timestamp",
+          "type": "string"
+        },
+        "resultSize": {
+          "description": "Number of records in result set",
+          "type": "integer"
+        },
+        "installationSchedule": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/InstallationSchedule"
+          }
+        }
+      },
+      "required": [
+        "lastDateTimeStamp",
+        "resultSize",
+        "installationSchedule"
+      ]
+    },
+    "ProspectResponse": {
+      "title": "Prospect Response",
+      "type": "object",
+      "properties": {
+        "partyId": {
+          "description": "Prospect Identifier",
+          "type": "string",
+          "example": "10cabced-565c-427c-a7cc-0d6210f06463"
+        },
+        "accountType": {
+          "description": "customer account type",
+          "type": "string",
+          "example": "Leads"
+        },
+        "contact": {
+          "$ref": "#/definitions/Phone"
+        },
+        "address": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NewProspectAddress"
+          }
+        }
+      }
+    },
+    "Phone": {
+      "title": "Customer's Phone Details",
+      "type": "object",
+      "properties": {
+        "PhoneNumber": {
+          "description": "Customer's Phone Number",
+          "type": "string",
+          "example": "3235551212"
+        },
+        "phoneType": {
+          "description": "Customer's Phone Type",
+          "type": "string",
+          "example": "Alternate"
+        }
+      }
+    },
+    "NewProspectAddress": {
+      "title": "Potential Customer's Address",
+      "type": "object",
+      "properties": {
+        "address": {
+          "description": "Street number and name",
+          "type": "string",
+          "x-example": "1234 Elm St."
+        },
+        "address2": {
+          "description": "Address Line 2 - Apartment, suite, etc.",
+          "type": "string",
+          "x-example": "#201"
+        },
+        "city": {
+          "description": "City",
+          "type": "string",
+          "x-example": "Everett"
+        },
+        "state": {
+          "description": "State",
+          "type": "string",
+          "x-example": "WA"
+        },
+        "postalCode": {
+          "description": "State",
+          "type": "string",
+          "x-example": "98201"
+        },
+        "isBusiness": {
+          "description": "A flag which indicates whether or not this is a business address",
+          "type": "boolean",
+          "x-example": true
+        }
+      }
+    },
+    "ProspectiveAddressRecord": {
+      "title": "Potential Customer's Address",
+      "type": "object",
+      "properties": {
+        "accountType": {
+          "description": "customer account type",
+          "type": "string",
+          "example": "Leads"
+        },
+        "address": {
+          "$ref": "#/definitions/NewProspectAddress"
+        }
+      }
+    },
+    "ProspectiveCustomerRecord": {
+      "title": "Prospective Customer Record",
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "description": "Prospect's first name",
+          "type": "string",
+          "x-example": "Alan"
+        },
+        "productIds": {
+          "description": "Prospect's Product Id",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-example": [
+            "14589"
+          ]
+        },
+        "lastName": {
+          "description": "Prospect's last name",
+          "type": "string",
+          "x-example": "NotOlifson"
+        },
+        "email": {
+          "description": "Prospect's email address",
+          "type": "string",
+          "x-example": "alan.notolifson@spectrum.com"
+        },
+        "mobileNumber": {
+          "description": "Customer's Mobile Number",
+          "type": "string",
+          "x-example": "12145551234"
+        },
+        "businessName": {
+          "description": "Prospect's business name",
+          "type": "string",
+          "x-example": "Spectrum"
+        },
+        "serviceLocation": {
+          "$ref": "#/definitions/NewProspectAddress"
+        },
+        "notificationPreferences": {
+          "$ref": "#/definitions/ProspectNotificationPreferences"
+        }
+      }
+    },
+    "ProspectNotificationPreferences": {
+      "title": "Notification preferences",
+      "type": "object",
+      "properties": {
+        "marketingEmailEnabled": {
+          "description": "A flag to determine whether or not to send marketing emails to this user",
+          "type": "boolean",
+          "x-example": false
+        },
+        "smsEnabled": {
+          "description": "A flag to determine whether or not to send SMS updates to this user",
+          "type": "boolean",
+          "x-example": true
+        }
+      }
+    },
+    "ErrorResponse": {
+      "title": "Error Response",
+      "type": "object",
+      "properties": {
+        "message": {
+          "description": "Human-readable error message",
+          "type": "string"
+        },
+        "httpStatusCode": {
+          "description": "Http status code as returned in response",
+          "type": "integer"
+        },
+        "origin": {
+          "description": "Source system where the error occurred",
+          "type": "string"
+        },
+        "errors": {
+          "description": "Underlying error messages",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "message",
+        "httpStatusCode"
+      ]
+    }
+  },
+  "parameters": {
+    "InquiryId": {
+      "name": "inquiryId",
+      "in": "path",
+      "description": "Inquiry Identifier",
+      "type": "string",
+      "required": true
+    },
+    "QuoteId": {
+      "name": "quoteId",
+      "in": "path",
+      "description": "Quote Identifier",
+      "type": "string",
+      "required": true
+    },
+    "QuoteIdParameter": {
+      "name": "quoteId",
+      "in": "query",
+      "description": "Quote Identifier",
+      "type": "string"
+    },
+    "ProductIdParameter": {
+      "name": "productId",
+      "in": "query",
+      "description": "Product Identifier",
+      "type": "string"
+    },
+    "AfterTimestamp": {
+      "name": "afterTimestamp",
+      "in": "query",
+      "description": "Serves as reference for the beginning point of pagination",
+      "type": "string"
+    },
+    "Limit": {
+      "name": "limit",
+      "in": "query",
+      "description": "Limit for paginated results",
+      "type": "integer"
+    },
+    "ProspectId": {
+      "name": "prospectId",
+      "in": "path",
+      "description": "Prospect Identifier",
+      "type": "string",
+      "required": true
+    },
+    "Channel": {
+      "name": "channel",
+      "in": "query",
+      "description": "Prospect Code",
+      "type": "string",
+      "required": true
+    },
+    "ZipCode": {
+      "name": "zipCode",
+      "in": "path",
+      "description": "Zip Code",
+      "type": "number",
+      "required": true
+    }
+  }
+}
