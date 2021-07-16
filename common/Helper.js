@@ -12,7 +12,7 @@ class Helper {
  
     encryptPassword(password = new String()) {
   		if (password != undefined) {
-  			let cipher = crypto.createCipher(config.enc.algorithm, config.enc.password);
+  			let cipher = crypto.createCipher(config.enc.algorithm, config.enc.key);
   			let crypted = cipher.update(password, 'utf8', 'hex');
   			crypted += cipher.final('hex');
   			return crypted;
@@ -21,7 +21,7 @@ class Helper {
 
     decryptPassword(encrypted = new String()) {
 		if (encrypted != undefined) {
-			let decipher = crypto.createDecipher(config.enc.algorithm, config.enc.password);
+			let decipher = crypto.createDecipher(config.enc.algorithm, config.enc.key);
 			let dec = decipher.update(encrypted, 'hex', 'utf8');
 			dec += decipher.final('utf8');
 			return dec;

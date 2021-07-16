@@ -17,7 +17,8 @@ const CONFIG = {
     },
     enc: {
         algorithm: "aes-256-cbc",
-        password: "newage"
+        key: "newage",
+        length: 16
     },
 
     jwt_secret: "newage",

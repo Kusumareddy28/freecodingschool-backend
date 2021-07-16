@@ -1,9 +1,11 @@
 const userModel = require('./userModel');
+const utils = require("./../../common/utils");
 const {signup,signin} =  require('./userController');
-const Helper = require("./../../lib/Helper");
+const errorHandler = require('./../../common/error-handler');
+const Helper = require("./../../common/Helper");
 const helper = new Helper();
 const { body, validationResult } = require('express-validator');
-exports.signup = async function(req,res){
+exports.signup =  utils.wrapAsync(async function(req,res){
     body('first_name','Please enter username').notEmpty();
     body('email','Please enter email').notEmpty();
     body('email','Please enter valid email').isEmail();
@@ -16,46 +18,25 @@ exports.signup = async function(req,res){
 			message:errors
 		});
 	}else{
-        const data = req.body;
-        const user = await userModel.getUserByQuery({email:data.email});
-        if(user){
-            return res.status(400).json({ error:true,message:"User is already registered"})
-        }        
+        const data = req.body;               
         data.last_name = data.last_name || "";
         const response = await signup(data);
         const token = helper.generateJWT(response);
-        res.setHeader("AuthToken",token);
-        res.status(201);
+        res.json({token});
     }
-}
-exports.signin = async function(req,res){
+});
+exports.signin = utils.wrapAsync(async function(req,res){
     body('email','Please enter email').notEmpty();
     body('email','Please enter valid email').isEmail();
     body('password','Please enter password').notEmpty();
     const errors = validationResult(req);
 	if (!errors.isEmpty()) {
-		return res.status(400).send({
-			error:true,
-			message:errors
-		});
-	}else{
-        const data = req.body;
-        const user = await userModel.getUserByQuery({email:data.email});
-        if(!user){
-            return res.status(400).json({ error:true,message:"User is not registered"})
-        }else{
-            try{
-                const response = await signin(user,data);
-                const token = helper.generateJWT(response);
-                res.setHeader("AuthToken",token);
-                res.status(201);
-            }catch(e){
-                return res.status(401).send({
-                    error:true,
-                    message:e
-                }); 
-            }
-
-        }     
+        let err = errorHandler.createError(errors, 400, true);
+        throw err;
+	}else{    
+        const data = req.body;    
+        const response = await signin(data);
+        const token = helper.generateJWT(response); 
+        res.json({token});
     }
-}
+});
