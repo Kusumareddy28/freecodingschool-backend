@@ -1,0 +1,40 @@
+{
+  "name": "usee-api",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "nodemon ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "~1.17.1",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.3",
+    "dotenv": "^5.0.1",
+    "ejs": "~2.5.6",
+    "express": "~4.15.2",
+    "express-validator": "^6.12.0",
+    "fcm-push": "^1.1.3",
+    "gm": "^1.23.1",
+    "googleapis": "^46.0.0",
+    "jsonfile": "^5.0.0",
+    "jsonwebtoken": "^8.2.1",
+    "merge": "^1.2.0",
+    "moment": "^2.22.0",
+    "mongoose": "^5.13.3",
+    "morgan": "~1.8.1",
+    "nodemailer": "^4.6.4",
+    "nodemon": "^1.19.1",
+    "rand-token": "^0.4.0",
+    "randomatic": "^3.0.0",
+    "request": "^2.88.0",
+    "serve-favicon": "~2.4.2",
+    "swagger-express-middleware": "^4.0.2",
+    "swagger-ui-express": "^4.1.6",
+    "uniqid": "^5.0.3",
+    "uuid": "^3.2.1"
+  },
+  "devDependencies": {
+    "multer": "^1.4.2"
+  }
+}
