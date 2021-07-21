@@ -40,3 +40,15 @@ exports.signin = utils.wrapAsync(async function(req,res){
         res.json({token});
     }
 });
+exports.getUser = utils.wrapAsync(async function(req,res){
+    const {authtoken} = req.headers;
+    const user = await helper.validateToken(authtoken);
+    delete user.password;
+    delete user.__v;
+	if (!user) {
+        let err = errorHandler.createError("Not Authenticated", 401, true);
+        throw err;
+	}else{    
+        res.json({success:true,user});
+    }
+});

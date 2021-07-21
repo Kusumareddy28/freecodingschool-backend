@@ -42,7 +42,7 @@ const signin = async(body) =>{
   }catch(e){
     throw (e);
   }
-};
+}
 
 module.exports = {
   signin,
