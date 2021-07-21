@@ -18,6 +18,77 @@
     "application/json"
   ],
   "paths": {
+
+    "/signup":{
+
+        "post":{
+          "tags": [
+            "Signup"
+          ],
+          "description": "Accounts must be verified before authentication",
+          "summary": "Authenticate account crendentials and return the login page",
+          "parameters": [
+            {
+              "first_name": "name",
+              "in":"body",
+              "required" : true,
+              "description" : "User to signup", 
+              "schema": {
+                "$ref": "#/definitions/signup"
+              }
+            }
+          ],
+          "responses":{
+            "200": {
+              "description": "Account details",
+              "schema": {
+                "$ref": "#/definitions/signup"
+              }
+            },
+            "400": {
+              "description": "Invalid Request"
+            }
+
+          }
+    }
+
+    },
+
+    "/signin": {
+
+      "post":{
+        "tags": [
+          "Signin"
+        ],
+        "description": "Accounts must be registered before singin ",
+        "summary": "Authenticate the user and return to the login page",
+        "parameters": [
+          {
+            "first_name": "name",
+            "in":"body",
+            "required" : true,
+            "description" : "User to signin", 
+            "schema": {
+              "$ref": "#/definitions/signin"
+            }
+          }
+        ],
+        "responses":{
+          "200": {
+            "description": "Account details",
+            "schema": {
+              "$ref": "#/definitions/signin"
+            }
+          },
+          "400": {
+            "description": "Invalid Credentials"
+          }
+
+        }
+  }
+
+    },
+
     "/healthcheck": {
       "get": {
         "tags": [
@@ -62,6 +133,7 @@
         }
       }
     },
+    
     "/v2/serviceability": {
       "post": {
         "tags": [
@@ -495,6 +567,75 @@
     }
   },
   "definitions": {
+
+    
+    "signup":{
+      "title" : "Register information of the user",
+      "type":"object",
+      "properties":{
+        "first_name" : {
+          "description" : "Name of the user for signup",
+          "type" : "string",
+          "x-example": "abc"
+        },
+        "email" : {
+          "description" : "Valid Email of the user for signup",
+          "type" : "string",
+          "x-example": "abc@gmail.com"
+        },
+        "role" : {
+          
+            "description" : "Role of the user",
+            "type" : "string",
+            "x-example" : "STUDENT",
+            "enum" : [
+              "STUDENT",
+              "VOLUNTEER",
+              "PARENT"
+            ]
+          
+          
+        },
+        "password" : {
+          "description" : "Good password for sign up",
+          "type" : "string",
+          "x-example" : "Abcd@123"
+        }
+        
+      },
+      "required" : [
+        "first_name",
+        "email",
+        "password"
+
+      ]
+    },
+
+
+    "signin": {
+
+      "title" : "Signin if registered user",
+      "type":"object",
+      "properties":{
+      "email" : {
+        "description" : "Valid and registered Email of the user for signin",
+        "type" : "string",
+        "x-example": "abc@gmail.com"
+      },
+      "password" : {
+        "description" : "valid password for sign up",
+        "type" : "string",
+        "x-example" : "Abcd@123"
+      }
+    },
+    "required" : [
+      
+      "email",
+      "password"
+
+    ]
+
+    },
     "NewCustomerAddress": {
       "title": "Potential Customer's Address",
       "type": "object",
