@@ -38,7 +38,7 @@
 					"200": {
 						"description": "Success Response",
 						"schema": {
-							"$ref": "#/definitions/signup"
+							"$ref": "#/definitions/RegistrationResponse"
 						}
 					},
 					"400": {
