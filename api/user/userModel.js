@@ -6,15 +6,14 @@ const userSchema = new mongoose.Schema({
     last_name: { type: String, required: false,trim:true },
     password: { type: String, required: true ,trim:true},
     is_verified: { type: Boolean, required: true ,default:true},
-    target: {
-        role: { type: String, enum: roles }
-    },
+    policy: { type: Boolean, required: true ,default:true},
+    role: { type: String, enum: roles,required: true},
     createdAt:{
         type: Date,
         default: Date.now
     }    
 },{timestamps: true});
-const user = mongoose.model('Role',userSchema);
+const user = mongoose.model('user',userSchema);
 const getUserByQuery = async (query) => {   
 	const result = user.findOne(query).cursor();  
     const response = await result.next();
