@@ -179,7 +179,7 @@
 		}
 	},
 	"parameters": {
-		"InquiryId": {
+		"token": {
 			"name": "token",
 			"in": "header",
 			"description": "Authorization Token",
