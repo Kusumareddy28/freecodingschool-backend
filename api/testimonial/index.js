@@ -19,32 +19,25 @@ exports.review =  utils.wrapAsync(async function(req,res){
 	}else{
         const data = req.body;               
         const response = await review(data);
-        res.json(response);
+        res.json({sucess:true,data:response});
     }
 });
 exports.getTestimonial = utils.wrapAsync(async function(req,res){
 
     try{
     const results = await Testimonial.find({},{});
-        res.send(results);
+       res.json({sucess:true,data:results});
     }catch(error){
-        console.log(error.message);
+        throw error;
     }
 });
 
 exports.getTestimonialById = utils.wrapAsync(async function(req, res){
-
     const id = req.params.id;
     try{
         const testimonial = await Testimonial.findById(id);
-        res.send(testimonial);
+       res.json({sucess:true,data:testimonial});
     }catch(error){
-       {/* return res.status(400).send({
-			error:true,
-			message:errors
-        });*/}
-        console.log(error.message);
-
+      throw error;
     }
-
 });

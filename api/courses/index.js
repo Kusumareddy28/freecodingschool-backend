@@ -20,8 +20,7 @@ exports.course =  utils.wrapAsync(async function(req,res){
 	}else{
         const data = req.body;               
         const response = await course(data);
-        const token = helper.generateJWT(response);
-        res.json({token});
+        res.json({success:truee,data});
     }
 });
 
@@ -34,8 +33,8 @@ exports.getCourse = utils.wrapAsync(async function(req,res){
 	if (!course) {
         let err = errorHandler.createError("Course does not exist", 401, true);
         throw err;
-	}else{    
-        res.send(course);
+	}else{   
+    res.json({success:truee,data:course});
     }
 });
 exports.getTestimonial = utils.wrapAsync(async function(req,res){
@@ -56,7 +55,7 @@ exports.getCourseById = utils.wrapAsync(async function(req, res){
     delete course.__v;
     try{
         const testimonial = await Testimonial.findById(id);
-        res.send(testimonial);
+        res.json({success:truee,data:testimonial});
     }catch(error){
        {/* return res.status(400).send({
 			error:true,
