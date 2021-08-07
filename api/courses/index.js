@@ -5,12 +5,18 @@ const errorHandler = require('./../../common/error-handler');
 const Helper = require("./../../common/Helper");
 const helper = new Helper();
 const { body, validationResult } = require('express-validator');
+const ADMIN = "ADMIN";
 exports.course =  utils.wrapAsync(async function(req,res){
+    const {authtoken} = req.headers;
+    const {role} = await helper.validateToken(authtoken);
+    if (role !== ADMIN) {
+        let err = errorHandler.createError("Not Authorized", 401, true);
+        throw err;
+	}
     body('course_name','Please enter coursename').notEmpty();
     body('description','Please enter course description').notEmpty();
     body('time','Please enter the duration of the course').notEmpty();
-    body('date','Please enter start date of the course').notEmpty();
-    
+    body('date','Please enter start date of the course').notEmpty();    
     const errors = validationResult(req); 
 	if (!errors.isEmpty()) {
 		return res.status(400).send({
@@ -19,50 +25,38 @@ exports.course =  utils.wrapAsync(async function(req,res){
 		});
 	}else{
         const data = req.body;               
-        const response = await course(data);
-        res.json({success:truee,data});
+        await course(data);
+        res.json({success:true,data});
     }
 });
 
 exports.getCourse = utils.wrapAsync(async function(req,res){
-    const {authtoken} = req.headers;
-    const course = await helper.validateToken(authtoken);
-    const course = await Courses.find();
-    delete course.password;
+    const course = await Courses.find({},{});
     delete course.__v;
 	if (!course) {
         let err = errorHandler.createError("Course does not exist", 401, true);
         throw err;
 	}else{   
-    res.json({success:truee,data:course});
+        res.json({success:true,data:course});
     }
 });
 exports.getTestimonial = utils.wrapAsync(async function(req,res){
-
     try{
-    const results = await Testimonial.find({},{});
-        res.send(results);
+        const testimonials = await Testimonial.find({},{});
+        res.json({success:true,data:testimonials});
     }catch(error){
-        console.log(error.message);
+        let err = errorHandler.createError(error?.message,500, error);
+        throw err;
     }
 });
 
 exports.getCourseById = utils.wrapAsync(async function(req, res){
-    const {authtoken} = req.headers;
-    const course = await helper.validateToken(authtoken);
-    const id = req.params.id;
-    delete course.password;
-    delete course.__v;
+    const {id} = req.params;
     try{
         const testimonial = await Testimonial.findById(id);
-        res.json({success:truee,data:testimonial});
-    }catch(error){
-       {/* return res.status(400).send({
-			error:true,
-			message:errors
-        });*/}
-        console.log(error.message);
-
+        res.json({success:true,data:testimonial});
+    }catch(error){         
+        let err = errorHandler.createError(error?.message,500, error);
+        throw err;
     }
-
 });

@@ -23,12 +23,12 @@ exports.review =  utils.wrapAsync(async function(req,res){
     }
 });
 exports.getTestimonial = utils.wrapAsync(async function(req,res){
-
     try{
-    const results = await Testimonial.find({},{});
-       res.json({sucess:true,data:results});
+        const results = await Testimonial.find({},{});
+        res.json({sucess:true,data:results});
     }catch(error){
-        throw error;
+        let err = errorHandler.createError(error?.message,500, error);
+        throw err;
     }
 });
 
@@ -38,6 +38,7 @@ exports.getTestimonialById = utils.wrapAsync(async function(req, res){
         const testimonial = await Testimonial.findById(id);
        res.json({sucess:true,data:testimonial});
     }catch(error){
-      throw error;
+        let err = errorHandler.createError(error?.message,500, error);
+        throw err;
     }
 });

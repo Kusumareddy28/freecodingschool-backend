@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const roles = ["TEACHER", "STUDENT","VOLUNTEER"];
+const roles = ["TEACHER", "STUDENT","VOLUNTEER","ADMIN"];
 const userSchema = new mongoose.Schema({
     email: { type: String, required: true ,lowercase: true,trim:true},
     first_name: { type: String, required: true,trim:true },
