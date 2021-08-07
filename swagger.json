@@ -76,7 +76,170 @@
 					}
 				}
 			}
+		},
+		"/course": {
+			"post": {
+				"tags": [
+					"Course"
+				],
+				"description": "Only admin can add the course ",
+				"summary": "Authenticate the admin and return to the course page",
+				"parameters": [{
+					"course_name": "name",
+					"in": "body",
+					"required": true,
+					"description": "Admin to add courses",
+					"schema": {
+						"$ref": "#/definitions/course"
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "Success Response",
+						"schema": {
+							"$ref": "#/definitions/RegistrationResponse"
+						}
+					},
+					"400": {
+						"description": "Invalid Credentials"
+					}
+				}
+			}
+		},
+		"getCourse": {
+			"get": {
+				"tags": [
+				  "Course"
+				],
+				"description": "This will retrieve an existing courses  added by admin",
+				"summary": "Retrieve an existing course",
+				"parameters": [
+				  {
+					"$ref": "#/parameters/course"
+				  }
+				],
+				"responses": {
+				  "200": {
+					"description": "Successfully Response with 0 or more courses",
+					"schema": {
+					  "$ref": "#/definitions/course"
+					}
+				  },
+				  "404": {
+					"description": "Not Found"
+				  }
+				}
+			}
+		
+		},
+		"getCourseById": {
+			"get": {
+				"tags": [
+				  "Course"
+				],
+				"description": "This will retrieve an particular existing course added by admin",
+				"summary": "Retrieve a particular existing course",
+				"parameters": [
+				  {
+					"$ref": "#/parameters/course"
+				  }
+				],
+				"responses": {
+				  "200": {
+					"description": "Successfully Response with 0 or more courses",
+					"schema": {
+					  "$ref": "#/definitions/course"
+					}
+				  },
+				  "404": {
+					"description": "Not Found"
+				  }
+				}
+			}
+		
+		},
+		"/review": {
+			"post": {
+				"tags": [
+					"Testimonial"
+				],
+				"description": "Any registered user can give a review ",
+				"summary": "Once the user add the review direct him to the course page which he registered",
+				"parameters": [{
+					"name": "name",
+					"in": "body",
+					"required": true,
+					"description": "User to add review",
+					"schema": {
+						"$ref": "#/definitions/review"
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "Success Response",
+						"schema": {
+							"$ref": "#/definitions/RegistrationResponse"
+						}
+					},
+					"400": {
+						"description": "Invalid Credentials"
+					}
+				}
+			}
+
+	
+	},
+	"getTestimonial": {
+		"get": {
+			"tags": [
+			  "Testimonial"
+			],
+			"description": "This will retrieve an existing review given by users",
+			"summary": "Retrieve an existing testimonial",
+			"parameters": [
+			  {
+				"$ref": "#/parameters/review"
+			  }
+			],
+			"responses": {
+			  "200": {
+				"description": "Successfully Response with 0 or more testimonials",
+				"schema": {
+				  "$ref": "#/definitions/review"
+				}
+			  },
+			  "404": {
+				"description": "Not Found"
+			  }
+			}
 		}
+	
+	},
+	"getTestimonialById": {
+		"get": {
+			"tags": [
+			  "Testimonial"
+			],
+			"description": "This will retrieve an existing review given by one single particular user",
+			"summary": "Retrieve an existing testimonial",
+			"parameters": [
+			  {
+				"$ref": "#/parameters/review"
+			  }
+			],
+			"responses": {
+			  "200": {
+				"description": "Successfully Response with 0 or more testimonials",
+				"schema": {
+				  "$ref": "#/definitions/review"
+				}
+			  },
+			  "404": {
+				"description": "Not Found"
+			  }
+			}
+		}
+	
 	},
 	"definitions": {
 		"signup": {
@@ -137,6 +300,78 @@
 				"password"
 			]
 		},
+		"course":{
+			"title": "Add course if you are an admin",
+			"type":"object",
+			"properties":{
+				"course_name": {
+					"description": "Relevant name of the course",
+					"type": "string",
+					"x-example": "Scratch"
+				},
+				"description": {
+					"description": "Relevant description of the course",
+					"type": "string",
+					"x-example": "Scratch is a block based programming"
+				},
+				"date": {
+					"description": "The date when the course starts",
+					"type": "string",
+					"x-example": "08/16/2020"
+				},
+				"time": {
+					"description": "The time when the course is scheduled ",
+					"type": "string",
+					"x-example": "07:30pm to 08:30pm"
+				}
+
+			},
+			"required": [
+				"course_name",
+				"description",
+				"date",
+				"time"
+			]
+		},
+		"review":{
+			"title": "Kindly give your Feedback",
+			"type":"object",
+			"properties":{
+				"name": {
+					"description": " Name of the user",
+					"type": "string",
+					"x-example": "abc"
+				},
+				"designation": {
+					"description": "Designation of the user",
+					"type": "string",
+					"x-example": "STUDENT",
+					"enum": [
+						"STUDENT",
+						"VOLUNTEER",
+						"PARENT"
+					]
+				},
+				"org_or_school": {
+					"description": "the orgnization where the user is working or studying in",
+					"type": "string",
+					"x-example": "Company name"
+				},
+				"review": {
+					"description": "The feedback for the course about how it was",
+					"type": "string",
+					"x-example": "Good course"
+					
+				}
+
+			},
+			"required": [
+				"name",
+				"designation",
+				"org_or_school",
+				"review"
+			]
+		},
     "RegistrationResponse":{
       "title": "Signin / Signup Reponse",
 			"type": "object",
@@ -187,4 +422,5 @@
 			"required": true
 		}
 	}
+}
 }
