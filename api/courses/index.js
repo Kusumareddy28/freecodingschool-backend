@@ -1,4 +1,4 @@
-const Courses = require('./courseModel');
+const {getCoursesByQuery} = require('./courseModel');
 const utils = require("./../../common/utils");
 const {course} =  require('./courseController');
 const errorHandler = require('./../../common/error-handler');
@@ -15,8 +15,9 @@ exports.course =  utils.wrapAsync(async function(req,res){
 	}
     body('course_name','Please enter coursename').notEmpty();
     body('description','Please enter course description').notEmpty();
-    body('time','Please enter the duration of the course').notEmpty();
-    body('date','Please enter start date of the course').notEmpty();    
+    body('start_time','Please enter the end time course').notEmpty();
+    body('end_time','Please enter the end time course').notEmpty();
+    body('days','Please enter start date of the course').notEmpty();    
     const errors = validationResult(req); 
 	if (!errors.isEmpty()) {
 		return res.status(400).send({
@@ -31,13 +32,12 @@ exports.course =  utils.wrapAsync(async function(req,res){
 });
 
 exports.getCourse = utils.wrapAsync(async function(req,res){
-    const course = await Courses.find({},{});
-    delete course.__v;
-	if (!course) {
-        let err = errorHandler.createError("Course does not exist", 401, true);
-        throw err;
-	}else{   
+    try{
+        const course = await getCoursesByQuery({});
         res.json({success:true,data:course});
+    }catch(e){
+        let err = errorHandler.createError(e, 401, e);
+        throw err;
     }
 });
 exports.getTestimonial = utils.wrapAsync(async function(req,res){

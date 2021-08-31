@@ -92,6 +92,8 @@
 					"schema": {
 						"$ref": "#/definitions/course"
 					}
+				},{
+					"$ref": "#/parameters/token"
 				}],
 				"responses": {
 					"200": {
@@ -104,9 +106,7 @@
 						"description": "Invalid Credentials"
 					}
 				}
-			}
-		},
-		"getCourse": {
+			},
 			"get": {
 				"tags": [
 				  "Course"
@@ -130,20 +130,14 @@
 				  }
 				}
 			}
-		
 		},
-		"getCourseById": {
+		"/course/{id}": {
 			"get": {
 				"tags": [
 				  "Course"
 				],
 				"description": "This will retrieve an particular existing course added by admin",
-				"summary": "Retrieve a particular existing course",
-				"parameters": [
-				  {
-					"$ref": "#/parameters/course"
-				  }
-				],
+				"summary": "Retrieve a particular existing course",				
 				"responses": {
 				  "200": {
 					"description": "Successfully Response with 0 or more courses",
@@ -155,8 +149,7 @@
 					"description": "Not Found"
 				  }
 				}
-			}
-		
+			}		
 		},
 		"/review": {
 			"post": {
@@ -173,6 +166,8 @@
 					"schema": {
 						"$ref": "#/definitions/review"
 					}
+				}, {
+					"$ref": "#/parameters/token"
 				}],
 				"responses": {
 					"200": {
@@ -185,61 +180,26 @@
 						"description": "Invalid Credentials"
 					}
 				}
-			}
-
-	
-	},
-	"getTestimonial": {
-		"get": {
-			"tags": [
-			  "Testimonial"
-			],
-			"description": "This will retrieve an existing review given by users",
-			"summary": "Retrieve an existing testimonial",
-			"parameters": [
-			  {
-				"$ref": "#/parameters/review"
-			  }
-			],
-			"responses": {
-			  "200": {
-				"description": "Successfully Response with 0 or more testimonials",
-				"schema": {
-				  "$ref": "#/definitions/review"
+			},
+			"get": {
+				"tags": [
+				"Testimonial"
+				],
+				"description": "This will retrieve an existing review given by users",
+				"summary": "Retrieve an existing testimonial",			
+				"responses": {
+				"200": {
+					"description": "Successfully Response with 0 or more testimonials",
+					"schema": {
+					"$ref": "#/definitions/review"
+					}
+				},
+				"404": {
+					"description": "Not Found"
 				}
-			  },
-			  "404": {
-				"description": "Not Found"
-			  }
 			}
+			}	
 		}
-	
-	},
-	"getTestimonialById": {
-		"get": {
-			"tags": [
-			  "Testimonial"
-			],
-			"description": "This will retrieve an existing review given by one single particular user",
-			"summary": "Retrieve an existing testimonial",
-			"parameters": [
-			  {
-				"$ref": "#/parameters/review"
-			  }
-			],
-			"responses": {
-			  "200": {
-				"description": "Successfully Response with 0 or more testimonials",
-				"schema": {
-				  "$ref": "#/definitions/review"
-				}
-			  },
-			  "404": {
-				"description": "Not Found"
-			  }
-			}
-		}
-	
 	},
 	"definitions": {
 		"signup": {
@@ -314,15 +274,20 @@
 					"type": "string",
 					"x-example": "Scratch is a block based programming"
 				},
-				"date": {
+				"days": {
 					"description": "The date when the course starts",
 					"type": "string",
-					"x-example": "08/16/2020"
+					"x-example": ["Monday"]
 				},
-				"time": {
-					"description": "The time when the course is scheduled ",
+				"start_time": {
+					"description": "The start time when the course is scheduled ",
 					"type": "string",
-					"x-example": "07:30pm to 08:30pm"
+					"x-example": "07:30pm"
+				},
+				"end_time": {
+					"description": "The end time when the course is scheduled ",
+					"type": "string",
+					"x-example": "08:30pm"
 				}
 
 			},
@@ -372,17 +337,17 @@
 				"review"
 			]
 		},
-    "RegistrationResponse":{
-      "title": "Signin / Signup Reponse",
+		"RegistrationResponse":{
+			"title": "Signin / Signup Reponse",
 			"type": "object",
-      "properties": {
+			"properties": {
 				"token": {
 					"description": "JWT token",
 					"type": "string",
 					"x-example": "dffdfdffdff"
 				}
 			}
-    },
+		},
 		"ErrorResponse": {
 			"title": "Error Response",
 			"type": "object",
@@ -420,7 +385,13 @@
 			"description": "Authorization Token",
 			"type": "string",
 			"required": true
+		},
+		"course": {
+			"name": "course",
+			"in": "path",
+			"description": "Course ID",
+			"type": "string",
+			"required": true
 		}
-	}
-}
+	}	
 }

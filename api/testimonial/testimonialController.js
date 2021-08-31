@@ -9,11 +9,11 @@ const helper = new Helper();
 const review = async(body) => { 
   try{
     const {name, designation, org_or_school, review} = body;
-    const data = await getTestimonialByQuery({name, designation, org_or_school, review});
-    if(data){
-        let err = errorHandler.createError("Review already given",400,true);
-        throw err;
-    } 
+    // const data = await getTestimonialByQuery({name, designation, org_or_school, review});
+    // if(data){
+    //     let err = errorHandler.createError("Review already given",400,true);
+    //     throw err;
+    // } 
     const response = await testimonial.create(body);
     return response;  
   }catch(e){

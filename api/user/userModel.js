@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
         default: Date.now
     }    
 },{timestamps: true});
-const user = mongoose.model('user',userSchema);
+const user = mongoose.model('User',userSchema);
 const getUserByQuery = async (query) => {   
 	const result = user.findOne(query).cursor();  
     const response = await result.next();

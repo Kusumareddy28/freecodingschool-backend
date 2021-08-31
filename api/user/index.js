@@ -37,7 +37,7 @@ exports.signin = utils.wrapAsync(async function(req,res){
         const data = req.body;    
         const response = await signin(data);
         const token = helper.generateJWT(response); 
-        res.json({token});
+        res.json({token,role:response.role});
     }
 });
 exports.getUser = utils.wrapAsync(async function(req,res){

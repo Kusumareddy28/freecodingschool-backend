@@ -1,27 +1,20 @@
 'use strict';
-const {courses, getCoursesByQuery} = require('./courseModel'),
+const {courseModel, getCoursesByQuery} = require('./courseModel'),
 errorHandler 	  = 	require('./../../common/error-handler'),
-//nodemailer 		= 	require('nodemailer'),
 path				    =	  require('path'),
 jwt 			 	    = 	require('jsonwebtoken');
 const Helper = require("./../../common/Helper");
 const helper = new Helper();
 
 const course = async(body) => { 
-  try{
-    const {course_name, description,date,time} = body;
-    const data = await getCoursesByQuery({course_name, description, date, time});
-    if(!data){
-     
-      let err = errorHandler.createError("Valid data has not been entered");
-      throw err;
-    }
-    const response = await courses.create(body);
-    return response;  
-  }catch(e){
-    let err = errorHandler.createError(e,500,true);
-    throw err;
-  }
+  const {course_name} = body;
+  const data = await getCoursesByQuery({course_name});
+  // if(data){     
+  //   let err = errorHandler.createError("Course name found already",400,[]);
+  //   throw err;
+  // }
+  const response = await courseModel.create(body);
+  return response;  
 };
 
 {/*
