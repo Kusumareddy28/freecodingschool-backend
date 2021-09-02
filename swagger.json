@@ -129,6 +129,32 @@
 					"description": "Not Found"
 				  }
 				}
+			},
+			"delete": {
+				"tags": [
+					"Course"
+				],
+				"description": "Only admin can delete the course ",
+				"summary": "Delete an existing course by id",
+				"parameters": [{
+					"name": "id",
+					"in": "body",
+					"required": true,
+					"description": "Course Id"
+				},{
+					"$ref": "#/parameters/token"
+				}],
+				"responses": {
+					"200": {
+						"description": "Success Response",
+						"schema": {
+							"$ref": "#/definitions/RegistrationResponse"
+						}
+					},
+					"400": {
+						"description": "Invalid Credentials"
+					}
+				}
 			}
 		},
 		"/course/{id}": {
