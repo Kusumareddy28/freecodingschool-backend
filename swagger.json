@@ -18,7 +18,7 @@
 		"application/json"
 	],
 	"paths": {
-		"/signup": {
+		"/user": {
 			"post": {
 				"tags": [
 					"Signup"
@@ -46,9 +46,32 @@
 					}
 
 				}
+			},
+			"get": {
+				"tags": [
+				  "User"
+				],
+				"description": "This will retrieve an user information",
+				"summary": "Retrieve an user",
+				"parameters": [
+				  {
+					"$ref": "#/parameters/token"
+				  }
+				],
+				"responses": {
+				  "200": {
+					"description": "Successfully Response with user details",
+					"schema": {
+					  "$ref": "#/definitions/UserResponse"
+					}
+				  },
+				  "404": {
+					"description": "Not Found"
+				  }
+				}
 			}
 		},
-		"/signin": {
+		"/user/auth": {
 			"post": {
 				"tags": [
 					"Signin"
@@ -99,7 +122,7 @@
 					"200": {
 						"description": "Success Response",
 						"schema": {
-							"$ref": "#/definitions/RegistrationResponse"
+							"$ref": "#/definitions/CourseResponse"
 						}
 					},
 					"400": {
@@ -148,7 +171,7 @@
 					"200": {
 						"description": "Success Response",
 						"schema": {
-							"$ref": "#/definitions/RegistrationResponse"
+							"$ref": "#/definitions/CourseResponse"
 						}
 					},
 					"400": {
@@ -174,6 +197,27 @@
 				  "404": {
 					"description": "Not Found"
 				  }
+				}
+			},
+			"patch":{
+				"tags": [
+					"Course"
+				],
+				"description": "Only admin can update the course ",
+				"summary": "Authenticate the admin and return to the course page",
+				"parameters": [{
+					"$ref": "#/parameters/token"
+				}],
+				"responses": {
+					"200": {
+						"description": "Success Response",
+						"schema": {
+							"$ref": "#/definitions/CourseResponse"
+						}
+					},
+					"400": {
+						"description": "Invalid Credentials"
+					}
 				}
 			}		
 		},
@@ -363,6 +407,42 @@
 				"review"
 			]
 		},
+		"UserResponse":{
+			"title": "User Reponse",
+			"type": "object",
+			"properties": {
+				"first_name": {
+					"description": "User first name",
+					"type": "string",
+					"x-example": "John"
+				},
+				"last_name": {
+					"description": "User last name",
+					"type": "string",
+					"x-example": "Doe"
+				},
+				"email": {
+					"description": "user email",
+					"type": "string",
+					"x-example": "info@freecodingschool.org"
+				},
+				"phone": {
+					"description": "User phone number",
+					"type": "string",
+					"x-example": "90567678"
+				},
+				"createdAt":{
+					"description": "user create date",
+					"type": "string",
+					"x-example": "2021-08-31T20:55:12.488+00:00"
+				},
+				"updatedAt":{
+					"description": "user last modified date",
+					"type": "string",
+					"x-example": "2021-08-31T20:55:12.488+00:00"
+				}
+			}
+		},
 		"RegistrationResponse":{
 			"title": "Signin / Signup Reponse",
 			"type": "object",
@@ -371,6 +451,52 @@
 					"description": "JWT token",
 					"type": "string",
 					"x-example": "dffdfdffdff"
+				}
+			}
+		},
+		"CourseResponse":{
+			"title": "Signin / Signup Reponse",
+			"type": "object",
+			"properties": {
+				"course_name": {
+					"description": "course name",
+					"type": "string",
+					"x-example": "Communication Skills"
+				},
+				"description": {
+					"description": "course description",
+					"type": "string",
+					"x-example": "Communication Skills"
+				},
+				"start_time": {
+					"description": "course start time",
+					"type": "string",
+					"x-example": "4.00pm"
+				},
+				"end_time": {
+					"description": "course end time",
+					"type": "string",
+					"x-example": "4.30pm"
+				},
+				"active":{
+					"description": "course status",
+					"type": "boolean",
+					"x-example": true
+				},
+				"days":{
+					"description": "course schedule",
+					"type": "array",
+					"x-example": ["Monday"]
+				},
+				"createdAt":{
+					"description": "course create date",
+					"type": "string",
+					"x-example": "2021-08-31T20:55:12.488+00:00"
+				},
+				"updatedAt":{
+					"description": "course last modified date",
+					"type": "string",
+					"x-example": "2021-08-31T20:55:12.488+00:00"
 				}
 			}
 		},

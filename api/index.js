@@ -8,6 +8,7 @@ exports.init = (router) => {
     router.post('/api/course',courses.course);
     router.get('/api/course',courses.getCourse); 
     router.get('/api/course/:id',courses.getCourseById); 
+    router.patch('/api/course/:id',courses.activateCourse); 
     router.delete('/api/course',courses.deleteCourse);      
     router.post('/api/review',testimonial.review);
     router.get('/api/review',testimonial.getTestimonial);

@@ -22,7 +22,7 @@ exports.signup =  utils.wrapAsync(async function(req,res){
         data.last_name = data.last_name || "";
         const response = await signup(data);
         const token = helper.generateJWT(response);
-        res.json({token});
+        res.json({token,role:response.role});
     }
 });
 exports.signin = utils.wrapAsync(async function(req,res){
@@ -43,12 +43,19 @@ exports.signin = utils.wrapAsync(async function(req,res){
 exports.getUser = utils.wrapAsync(async function(req,res){
     const {authtoken} = req.headers;
     const user = await helper.validateToken(authtoken);
-    delete user.password;
-    delete user.__v;
 	if (!user) {
         let err = errorHandler.createError("Not Authenticated", 401, true);
         throw err;
 	}else{    
-        res.json({success:true,user});
+        const {first_name,phone,last_name,email} = user
+        res.json({
+            success:true,
+            data:{
+                first_name,
+                phone,
+                last_name,
+                email
+            }
+        });
     }
 });

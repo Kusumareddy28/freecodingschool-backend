@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema({
     last_name: { type: String, required: false,trim:true },
     password: { type: String, required: true ,trim:true},
     is_verified: { type: Boolean, required: true ,default:true},
+    phone: { type: Number, required: false ,default:null},
     policy: { type: Boolean, required: true ,default:true},
     role: { type: String, enum: roles,required: true},
     createdAt:{
