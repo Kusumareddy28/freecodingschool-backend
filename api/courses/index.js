@@ -3,6 +3,8 @@ const utils = require("./../../common/utils");
 const {course} =  require('./courseController');
 const errorHandler = require('./../../common/error-handler');
 const Helper = require("./../../common/Helper");
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' }).single('avatar')
 const helper = new Helper();
 const { body, validationResult } = require('express-validator');
 const ADMIN = "ADMIN";
@@ -19,12 +21,16 @@ exports.course =  utils.wrapAsync(async function(req,res){
     body('end_time','Please enter the end time course').notEmpty();
     body('days','Please enter start date of the course').notEmpty();    
     const errors = validationResult(req); 
+    
 	if (!errors.isEmpty()) {
 		return res.status(400).send({
 			error:true,
 			message:errors
 		});
 	}else{
+        upload(req, res, function (err) {
+            
+        })
         const data = req.body;               
         await course(data);
         res.json({success:true,data});
