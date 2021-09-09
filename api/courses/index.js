@@ -2,12 +2,22 @@ const {getCoursesByQuery,deleteCourse, updateCourse} = require('./courseModel');
 const utils = require("./../../common/utils");
 const {course} =  require('./courseController');
 const errorHandler = require('./../../common/error-handler');
+const multer = require('multer');
+// const upload = require("./../../common/fileupload");
 const Helper = require("./../../common/Helper");
-const multer  = require('multer')
-const upload = multer({ dest: 'uploads/' }).single('avatar')
 const helper = new Helper();
 const { body, validationResult } = require('express-validator');
 const ADMIN = "ADMIN";
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/courses')
+    },
+    filename: function (req, file, cb) {
+      // file.fieldname + '-' +
+      cb(null,Date.now())
+    }
+  })
+const upload = multer({storage}).single('avatar');
 exports.course =  utils.wrapAsync(async function(req,res){
     const {authtoken} = req.headers;
     const {role} = await helper.validateToken(authtoken);
@@ -28,9 +38,13 @@ exports.course =  utils.wrapAsync(async function(req,res){
 			message:errors
 		});
 	}else{
-        upload(req, res, function (err) {
-            
-        })
+        // await upload(req, res, function (err) {
+        //     if(err){
+        //         console.log(err);
+        //         return;
+        //     }
+        //     console.log(res);
+        // })
         const data = req.body;               
         await course(data);
         res.json({success:true,data});

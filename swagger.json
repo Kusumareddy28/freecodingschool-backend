@@ -207,6 +207,17 @@
 				"summary": "Authenticate the admin and return to the course page",
 				"parameters": [{
 					"$ref": "#/parameters/token"
+				},
+				{					
+					"in": "body",
+					"required": true,
+					"description": "active status to update",
+					"properties":{
+						"active": {
+							"type": "boolean",
+							"x-example": true
+						}
+					}					
 				}],
 				"responses": {
 					"200": {
