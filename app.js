@@ -43,7 +43,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, './public')));
 app.use('/api/swagger', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
-swagger(swaggerDocument, app, (middlewareError, middleware) => {
+swagger(swaggerDocument, app, (_, middleware) => {
   app.use(middleware.metadata(),
     middleware.parseRequest(),
     middleware.validateRequest());  

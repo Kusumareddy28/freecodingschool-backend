@@ -1,4 +1,4 @@
-const {getCoursesByQuery,deleteCourse, updateCourse} = require('./courseModel');
+const {getCoursesByQuery,getCoursesById,deleteCourse, updateCourse} = require('./courseModel');
 const utils = require("./../../common/utils");
 const {course} =  require('./courseController');
 const errorHandler = require('./../../common/error-handler');
@@ -6,7 +6,7 @@ const multer = require('multer');
 // const upload = require("./../../common/fileupload");
 const Helper = require("./../../common/Helper");
 const helper = new Helper();
-const { body, validationResult } = require('express-validator');
+const { check, validationResult } = require('express-validator');
 const ADMIN = "ADMIN";
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -25,30 +25,39 @@ exports.course =  utils.wrapAsync(async function(req,res){
         let err = errorHandler.createError("Not Authorized", 401, true);
         throw err;
 	}
-    body('course_name','Please enter coursename').notEmpty();
-    body('description','Please enter course description').notEmpty();
-    body('start_time','Please enter the end time course').notEmpty();
-    body('end_time','Please enter the end time course').notEmpty();
-    body('days','Please enter start date of the course').notEmpty();    
-    const errors = validationResult(req); 
-    
-	if (!errors.isEmpty()) {
-		return res.status(400).send({
-			error:true,
-			message:errors
-		});
-	}else{
-        // await upload(req, res, function (err) {
-        //     if(err){
-        //         console.log(err);
-        //         return;
-        //     }
-        //     console.log(res);
-        // })
+    // await check('course_name').notEmpty().withMessage({
+    //     message: 'Please enter coursename'
+    // }).run(req);
+    // await check('description').isEmail().withMessage({
+    //     message: 'Please enter course description'
+    // }).run(req);
+    // await check('start_time').isEmail().withMessage({
+    //     message: 'Please enter start time course'
+    // }).run(req);
+    // await check('end_time').isEmail().withMessage({
+    //     message: 'Please enter end time course'
+    // }).run(req);
+    // await check('days').isEmail().withMessage({
+    //     message: 'Please enter start date of the course'
+    // }).run(req);
+    // const result = validationResult(req);     
+	// if (!result.isEmpty()) {
+	// 	return res.status(400).send({
+	// 		error:true,
+	// 		message:result.errors
+	// 	});
+	// }else{
+        await upload(req, res, function (err) {
+            if(err){
+                console.log(err);
+                return;
+            }
+            console.log(res);
+        })
         const data = req.body;               
         await course(data);
         res.json({success:true,data});
-    }
+   // }
 });
 
 exports.getCourse = utils.wrapAsync(async function(req,res){
@@ -73,8 +82,8 @@ exports.getTestimonial = utils.wrapAsync(async function(req,res){
 exports.getCourseById = utils.wrapAsync(async function(req, res){
     const {id} = req.params;
     try{
-        const testimonial = await Testimonial.findById(id);
-        res.json({success:true,data:testimonial});
+        const course = await getCoursesById(id);
+        res.json({success:true,data:course});
     }catch(error){         
         let err = errorHandler.createError(error?.message,500, error);
         throw err;

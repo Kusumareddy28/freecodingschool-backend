@@ -328,11 +328,13 @@
 				"email": {
 					"description": "Valid and registered Email of the user for signin",
 					"type": "string",
+					"required": true,
 					"x-example": "abc@gmail.com"
 				},
 				"password": {
 					"description": "valid password for sign up",
 					"type": "string",
+					"required": true,
 					"x-example": "Abcd@123"
 				}
 			},
@@ -348,11 +350,13 @@
 				"course_name": {
 					"description": "Relevant name of the course",
 					"type": "string",
+					"required": true,
 					"x-example": "Scratch"
 				},
 				"description": {
 					"description": "Relevant description of the course",
 					"type": "string",
+					"required": true,
 					"x-example": "Scratch is a block based programming"
 				},
 				"days": {

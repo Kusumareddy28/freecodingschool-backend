@@ -4,18 +4,25 @@ const {signup,signin} =  require('./userController');
 const errorHandler = require('./../../common/error-handler');
 const Helper = require("./../../common/Helper");
 const helper = new Helper();
-const { body, validationResult } = require('express-validator');
+const { check, validationResult } = require('express-validator');
 exports.signup =  utils.wrapAsync(async function(req,res){
-    body('first_name','Please enter username').notEmpty();
-    body('email','Please enter email').notEmpty();
-    body('email','Please enter valid email').isEmail();
-    body('password','Please enter password').notEmpty();
-    body('role','Please select role').notEmpty();
+    await check('first_name').notEmpty().withMessage({
+        message: 'Please enter username'
+    }).run(req);
+    await check('email').isEmail().withMessage({
+        message: 'Please enter valid email'
+    }).run(req);
+    await check('password').notEmpty().withMessage({
+        message: 'Please enter password'
+    }).run(req);
+    await check('role').notEmpty().withMessage({
+        message: 'Please select role'
+    }).run(req);
     const errors = validationResult(req);
-	if (!errors.isEmpty()) {
+	if (!result.isEmpty()) {
 		return res.status(400).send({
 			error:true,
-			message:errors
+			message:result.errors
 		});
 	}else{
         const data = req.body;               
@@ -25,13 +32,16 @@ exports.signup =  utils.wrapAsync(async function(req,res){
         res.json({token,role:response.role});
     }
 });
-exports.signin = utils.wrapAsync(async function(req,res){
-    body('email','Please enter email').notEmpty();
-    body('email','Please enter valid email').isEmail();
-    body('password','Please enter password').notEmpty();
-    const errors = validationResult(req);
-	if (!errors.isEmpty()) {
-        let err = errorHandler.createError(errors, 400, true);
+exports.signin = utils.wrapAsync(async function(req,res){    
+    await check('email').isEmail().withMessage({
+        message: 'Please enter valid email'
+    }).run(req);
+    await check('password').notEmpty().withMessage({
+        message: 'Please enter password'
+    }).run(req);
+    const result = validationResult(req);
+	if (!result.isEmpty()) {
+        let err = errorHandler.createError(result.errors, 400, true);
         throw err;
 	}else{    
         const data = req.body;    
