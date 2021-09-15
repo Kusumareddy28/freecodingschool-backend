@@ -50,9 +50,15 @@ exports.addCourse =  utils.wrapAsync(async function(req,res){
    // }
 });
 
-exports.getCourse = utils.wrapAsync(async function(req,res){
+exports.getCourse = utils.wrapAsync(async function(req,res){      
     try{
-        const course = await getCoursesByQuery({active:true});
+        let active = true;
+        const {authtoken} = req.headers;
+        if(authtoken){
+            const {role} = await helper.validateToken(authtoken);
+            active =  (role === ADMIN);
+        }  
+        const course = await getCoursesByQuery({active});
         res.json({success:true,data:course});
     }catch(e){
         let err = errorHandler.createError(e, 401, e);
