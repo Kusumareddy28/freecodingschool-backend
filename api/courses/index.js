@@ -1,24 +1,16 @@
 const {getCoursesByQuery,getCoursesById,deleteCourse, updateCourse} = require('./courseModel');
 const utils = require("./../../common/utils");
-const {course} =  require('./courseController');
+const {addCourse,uploadImage} =  require('./courseController');
 const errorHandler = require('./../../common/error-handler');
-const multer = require('multer');
-// const upload = require("./../../common/fileupload");
+// const multer = require('multer');
 const Helper = require("./../../common/Helper");
 const helper = new Helper();
 const { check, validationResult } = require('express-validator');
 const ADMIN = "ADMIN";
-var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, 'uploads/courses')
-    },
-    filename: function (req, file, cb) {
-      // file.fieldname + '-' +
-      cb(null,Date.now())
-    }
-  })
-const upload = multer({storage}).single('avatar');
-exports.course =  utils.wrapAsync(async function(req,res){
+
+exports.addCourse =  utils.wrapAsync(async function(req,res){
+    const image_name = await uploadImage(req,res)
+
     const {authtoken} = req.headers;
     const {role} = await helper.validateToken(authtoken);
     if (role !== ADMIN) {
@@ -26,19 +18,19 @@ exports.course =  utils.wrapAsync(async function(req,res){
         throw err;
 	}
     // await check('course_name').notEmpty().withMessage({
-    //     message: 'Please enter coursename'
+    //     message: 'Course name is required'
     // }).run(req);
     // await check('description').isEmail().withMessage({
-    //     message: 'Please enter course description'
+    //     message: 'Course description is required'
     // }).run(req);
     // await check('start_time').isEmail().withMessage({
-    //     message: 'Please enter start time course'
+    //     message: 'Start time is required'
     // }).run(req);
     // await check('end_time').isEmail().withMessage({
-    //     message: 'Please enter end time course'
+    //     message: 'End time is required'
     // }).run(req);
     // await check('days').isEmail().withMessage({
-    //     message: 'Please enter start date of the course'
+    //     message: 'Start date is required'
     // }).run(req);
     // const result = validationResult(req);     
 	// if (!result.isEmpty()) {
@@ -47,16 +39,14 @@ exports.course =  utils.wrapAsync(async function(req,res){
 	// 		message:result.errors
 	// 	});
 	// }else{
-        await upload(req, res, function (err) {
-            if(err){
-                console.log(err);
-                return;
-            }
-            console.log(res);
-        })
-        const data = req.body;               
-        await course(data);
-        res.json({success:true,data});
+        try{
+            const {body} = req;
+            const data = await addCourse({...body,image_name});
+            res.json({success:true,data});
+        }catch(e){
+            let err = errorHandler.createError(e, 401, e);
+            throw err;
+        }        
    // }
 });
 
@@ -89,6 +79,19 @@ exports.getCourseById = utils.wrapAsync(async function(req, res){
         throw err;
     }
 });
+
+// exports.uploadCourseImage = utils.wrapAsync(async function(req, res){
+//     const {authtoken} = req.headers;
+//     const upload = multer({storage }).single('file');
+//     upload(req,res,function(err,response) {
+//         if(err) {
+//             return res.end("Error uploading file.");
+//         }
+//         res.json({response});
+//     });
+//     // res.send(204)
+// });
+
 exports.activateCourse = utils.wrapAsync(async function(req, res){
     const {authtoken} = req.headers;
     const {role} = await helper.validateToken(authtoken);
@@ -96,7 +99,9 @@ exports.activateCourse = utils.wrapAsync(async function(req, res){
         let err = errorHandler.createError("Not Authorized", 401, true);
         throw err;
 	}
-    body('active','Please enter course active').notEmpty();   
+    await check('active').notEmpty().withMessage({
+        message: 'Course status is required'
+    }).run(req);  
     const errors = validationResult(req); 
     if (!errors.isEmpty()) {
 		return res.status(400).send({
@@ -122,7 +127,9 @@ exports.deleteCourse = utils.wrapAsync(async function(req, res){
         let err = errorHandler.createError("Not Authorized", 401, true);
         throw err;
 	}
-    body('id','Please enter course id').notEmpty();   
+    await check('id').notEmpty().withMessage({
+        message: 'Course id is required'
+    }).run(req);  
     const errors = validationResult(req); 
     if (!errors.isEmpty()) {
 		return res.status(400).send({

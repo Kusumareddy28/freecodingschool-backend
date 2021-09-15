@@ -232,6 +232,36 @@
 				}
 			}		
 		},
+		"/course/image": {
+			"post": {
+				"tags": [
+				  "Course"
+				],
+				"description": "This will upload picture to course",
+				"consumes": [
+					"multipart/form-data"
+				],
+				"parameters": [{
+					"name": "file",
+					"in": "formData",
+					"required": true,
+					"description": "course image",
+					"type": "file"
+					}
+				],
+				"responses": {
+				  "200": {
+					"description": "Successfully Response returns course url",
+					"schema": {
+					  "$ref": "#/definitions/courseImageResponse"
+					}
+				  },
+				  "404": {
+					"description": "Not Found"
+				  }
+				}
+			}
+		},
 		"/review": {
 			"post": {
 				"tags": [
@@ -382,6 +412,18 @@
 				"date",
 				"time"
 			]
+		},
+		"courseImageResponse":{
+			"title": "Add course Image Upload Response",
+			"type":"object",
+			"properties":{
+				"course_image": {
+					"description": "path name of the course image saved location",
+					"type": "string",
+					"required": true,
+					"x-example": "image.png"
+				}
+			}
 		},
 		"review":{
 			"title": "Kindly give your Feedback",

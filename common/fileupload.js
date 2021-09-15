@@ -2,19 +2,7 @@
 const multer = require('multer');
 // const multerS3 = require('multer-s3');
 
-module.exports = () => {
-  var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, 'uploads/courses')
-    },
-    filename: function (req, file, cb) {
-      // file.fieldname + '-' +
-      cb(null,Date.now())
-    }
-  })
-  const upload = multer({storage}).single('avatar');
-  return upload;
-}
+
 
 
 

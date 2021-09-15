@@ -18,7 +18,7 @@ exports.signup =  utils.wrapAsync(async function(req,res){
     await check('role').notEmpty().withMessage({
         message: 'Please select role'
     }).run(req);
-    const errors = validationResult(req);
+    const result = validationResult(req);
 	if (!result.isEmpty()) {
 		return res.status(400).send({
 			error:true,

@@ -1,12 +1,14 @@
 const mongoose = require('mongoose');
-const days = ["Monday","Tuesday","Wednesday","Thursday","Friday"];
+const days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
 const courseSchema = new mongoose.Schema({      
     course_name: { type: String, required: true,trim:true },
     description: { type: String, required: true ,trim:true},
     days: { type: [String],enum: days,required: true ,trim:true},
     start_time: { type: String, required: true ,trim:true},
     end_time: { type: String, required: true ,trim:true},
+    image_name: { type: String, required: true ,trim:true},
     active:  { type: Boolean,  default: false},
+    enroll_link:  { type: String,  required: false,trim:true},
     createdAt:{
         type: Date,
         default: Date.now
