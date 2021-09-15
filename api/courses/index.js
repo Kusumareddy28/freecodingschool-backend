@@ -52,7 +52,7 @@ exports.addCourse =  utils.wrapAsync(async function(req,res){
 
 exports.getCourse = utils.wrapAsync(async function(req,res){
     try{
-        const course = await getCoursesByQuery({});
+        const course = await getCoursesByQuery({active:true});
         res.json({success:true,data:course});
     }catch(e){
         let err = errorHandler.createError(e, 401, e);
