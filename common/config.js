@@ -41,11 +41,12 @@ const CONFIG = {
                     <meta charset="UTF-8">
                 </head>
                 <body>`,
-        footer: `
+        footer: `                <footer>
                 <p>Thanks,</p>
                 <p>USEE Team</p>
                 </body>
                 </html>
+                </footer>
         `,
 
         subject: {
