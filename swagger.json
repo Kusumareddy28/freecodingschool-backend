@@ -403,8 +403,25 @@
 					"description": "The end time when the course is scheduled ",
 					"type": "string",
 					"x-example": "08:30pm"
+				},
+				"instructor": {
+					"type": "string"
+				},
+				"readings": {
+					"type": "string"
+				},
+				"content": {
+					"type": "string"
+				},
+				"requirements": {
+					"type": "string"
+				},
+				"learning": {
+					"type": "string"
+				},
+				"about": {
+					"type": "string"
 				}
-
 			},
 			"required": [
 				"course_name",

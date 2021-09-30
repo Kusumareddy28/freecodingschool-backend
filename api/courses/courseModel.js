@@ -9,6 +9,12 @@ const courseSchema = new mongoose.Schema({
     image_name: { type: String, required: true ,trim:true},
     active:  { type: Boolean,  default: false},
     enroll_link:  { type: String,  required: false,trim:true},
+    instructor: { type: String,  required: false,trim:true},
+    readings: { type: String,  required: false,trim:true},
+    content: { type: String,  required: false},
+    requirements: { type: String,  required: false},
+    learning:  { type: String,  required: false},
+    about:  { type: String,  required: false},
     createdAt:{
         type: Date,
         default: Date.now
