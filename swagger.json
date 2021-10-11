@@ -451,8 +451,8 @@
 					"type": "string",
 					"x-example": "abc"
 				},
-				"designation": {
-					"description": "Designation of the user",
+				"role": {
+					"description": "Role of the user",
 					"type": "string",
 					"x-example": "STUDENT",
 					"enum": [
@@ -460,6 +460,11 @@
 						"VOLUNTEER",
 						"PARENT"
 					]
+				},
+				"designation": {
+					"description": "Designation of the user",
+					"type": "string",
+					"x-example": "STUDENT"					
 				},
 				"org_or_school": {
 					"description": "the orgnization where the user is working or studying in",
@@ -476,6 +481,7 @@
 			},
 			"required": [
 				"name",
+				"role"
 				"designation",
 				"org_or_school",
 				"review"
