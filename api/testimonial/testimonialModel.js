@@ -1,11 +1,14 @@
 const mongoose = require('mongoose');
 
+const roles = ["TEACHER", "STUDENT","VOLUNTEER"];
+
 const testimonialSchema = new mongoose.Schema({
        
     name: { type: String, required: true,trim:true },
     designation: { type: String, required: true ,trim:true},
     org_or_school: { type: String, required: true ,trim:true},
     review: { type: String, required: true ,trim:true},
+    role: { type: String, enum: roles,required: true},
     createdAt:{
         type: Date,
         default: Date.now
