@@ -8,7 +8,7 @@ const Helper = require("./../../common/Helper");
 const helper = new Helper();
 const review = async(body) => { 
   try{
-    const {name, designation, org_or_school, review} = body;
+    const {name, designation, org_or_school, review, role} = body;
     // const data = await getTestimonialByQuery({name, designation, org_or_school, review});
     // if(data){
     //     let err = errorHandler.createError("Review already given",400,true);
