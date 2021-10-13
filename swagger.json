@@ -481,7 +481,7 @@
 			},
 			"required": [
 				"name",
-				"role"
+				"role",
 				"designation",
 				"org_or_school",
 				"review"
