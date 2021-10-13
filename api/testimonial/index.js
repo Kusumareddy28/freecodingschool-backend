@@ -9,8 +9,9 @@ exports.review =  utils.wrapAsync(async function(req,res){
     body('name','Please enter your name').notEmpty();
     body('role','Please select your role').notEmpty();
     body('designation','Please enter your designation').notEmpty();
+    body('email','Please enter your email').notEmpty();
     body('org_or_school','Please enter your organization name').notEmpty();
-    body('review','Please give your review').notEmpty();
+    body('review','Please enter your comments').notEmpty();
     const errors = validationResult(req);
 	if (!errors.isEmpty()) {
 		return res.status(400).send({
