@@ -451,6 +451,11 @@
 					"type": "string",
 					"x-example": "abc"
 				},
+				"email": {
+					"description": "xyz@....com",
+					"type": "string",
+					"x-example": "xyz@....com"
+				},
 				"role": {
 					"description": "Role of the user",
 					"type": "string",
@@ -482,6 +487,7 @@
 			"required": [
 				"name",
 				"role",
+				"email",
 				"designation",
 				"org_or_school",
 				"review"
