@@ -64,15 +64,6 @@ exports.getCourse = utils.wrapAsync(async function(req,res){
         throw err;
     }
 });
-exports.getTestimonial = utils.wrapAsync(async function(req,res){
-    try{
-        const testimonials = await Testimonial.find({},{});
-        res.json({success:true,data:testimonials});
-    }catch(error){
-        let err = errorHandler.createError(error?.message,500, error);
-        throw err;
-    }
-});
 
 exports.getCourseById = utils.wrapAsync(async function(req, res){
     const {id} = req.params;

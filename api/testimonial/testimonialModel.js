@@ -15,11 +15,10 @@ const testimonialSchema = new mongoose.Schema({
     }  
     
 },{timestamps: true});
-const testimonial = mongoose.model('Testimonial',testimonialSchema);
-const getTestimonialByQuery = async (query) => {   
-	const result = testimonial.find(query).cursor();  
-    const response = await result.next();
-    return response;  
+const testimonial = mongoose.model('testimonial',testimonialSchema);
+const getAllTestimonial = async () => {   
+	const result = await testimonial.find().exec() 
+    return result;  
 }
 const getTestimonialById = async(query) => {
 	const result = testimonial.findOne({_id: parseInt(query)}).cursor(); 
@@ -29,7 +28,7 @@ const getTestimonialById = async(query) => {
 module.exports ={
     testimonial,
     testimonialSchema,
-    getTestimonialByQuery,
+    getAllTestimonial,
     getTestimonialById
 }
     
