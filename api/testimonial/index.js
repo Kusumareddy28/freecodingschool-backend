@@ -1,4 +1,4 @@
-const Testimonial = require('./testimonialModel');
+const {getTestimonialByQuery} = require('./testimonialModel');
 const utils = require("./../../common/utils");
 const {review} =  require('./testimonialController');
 const errorHandler = require('./../../common/error-handler');
@@ -26,7 +26,7 @@ exports.review =  utils.wrapAsync(async function(req,res){
 });
 exports.getTestimonial = utils.wrapAsync(async function(req,res){
     try{
-        const results = await Testimonial.find({},{});
+        const results = await getTestimonialByQuery({});
         res.json({sucess:true,data:results});
     }catch(error){
         let err = errorHandler.createError(error?.message,500, error);

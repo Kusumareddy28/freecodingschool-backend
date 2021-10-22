@@ -17,7 +17,7 @@ const testimonialSchema = new mongoose.Schema({
 },{timestamps: true});
 const testimonial = mongoose.model('Testimonial',testimonialSchema);
 const getTestimonialByQuery = async (query) => {   
-	const result = testimonial.findOne(query).cursor();  
+	const result = testimonial.find(query).cursor();  
     const response = await result.next();
     return response;  
 }
