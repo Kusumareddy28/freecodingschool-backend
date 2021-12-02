@@ -2,12 +2,11 @@ const {getCoursesByQuery,getCoursesById,deleteCourse, updateCourse} = require('.
 const utils = require("./../../common/utils");
 const {addCourse,uploadImage} =  require('./courseController');
 const errorHandler = require('./../../common/error-handler');
-// const multer = require('multer');
+
 const Helper = require("./../../common/Helper");
 const helper = new Helper();
 const { check, validationResult } = require('express-validator');
 const ADMIN = "ADMIN";
-
 exports.addCourse =  utils.wrapAsync(async function(req,res){
     const image_name = await uploadImage(req,res)
 

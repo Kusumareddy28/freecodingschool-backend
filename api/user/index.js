@@ -57,14 +57,17 @@ exports.getUser = utils.wrapAsync(async function(req,res){
         let err = errorHandler.createError("Not Authenticated", 401, true);
         throw err;
 	}else{    
-        const {first_name,phone,last_name,email} = user
+        const {first_name,phone,last_name,email, state, country, profile_picture} = user
         res.json({
             success:true,
             data:{
                 first_name,
                 phone,
                 last_name,
-                email
+                email,
+                state,
+                country,
+                profile_picture
             }
         });
     }
