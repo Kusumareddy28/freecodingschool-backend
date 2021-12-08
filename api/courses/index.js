@@ -44,7 +44,7 @@ exports.addCourse =  utils.wrapAsync(async function(req,res){
             res.json({success:true,data});
         }catch(e){
             let err = errorHandler.createError(e, 401, e);
-            throw err;
+          //  throw err;
         }        
    // }
 });

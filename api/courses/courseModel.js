@@ -15,6 +15,7 @@ const courseSchema = new mongoose.Schema({
     requirements: { type: String,  required: false},
     learning:  { type: String,  required: false},
     about:  { type: String,  required: false},
+   // phototUrl: {type:String},
     createdAt:{
         type: Date,
         default: Date.now

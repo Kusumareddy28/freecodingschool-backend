@@ -38,10 +38,13 @@ const addCourse = async(body) => {
 const uploadImage = (req,res) => {
   const uploadImg = upload.single('file')
   return new Promise((resolve,reject) => {
-    uploadImg(req,res,(err) => {
+    uploadImg(req,res,async(err) => {
       if(err)
         reject(err);      
       resolve(req?.file?.filename)
+      console.log(res.file)
+     // const  response = await courseModel.create({photoUrl : req.file.location});
+     // return response;
     });
   });
 }
