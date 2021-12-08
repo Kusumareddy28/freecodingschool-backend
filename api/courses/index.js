@@ -7,15 +7,20 @@ const Helper = require("./../../common/Helper");
 const helper = new Helper();
 const { check, validationResult } = require('express-validator');
 const ADMIN = "ADMIN";
-exports.addCourse =  utils.wrapAsync(async function(req,res){
-    const image_name = await uploadImage(req,res)
-
+exports.addCourse =  utils.wrapAsync(async function(req,res){  
     const {authtoken} = req.headers;
-    const {role} = await helper.validateToken(authtoken);
-    if (role !== ADMIN) {
-        let err = errorHandler.createError("Not Authorized", 401, true);
-        throw err;
-	}
+    try{
+        const {role} = await helper.validateToken(authtoken);
+        if (role !== ADMIN) {
+            let err = errorHandler.createError("Not Authorized", 401, true);
+            res.status(err.statusCode).json(err)
+        } 
+    }catch(e){
+        let err = errorHandler.createError(e, 400 , e);
+        res.status(err.statusCode).json(err)
+        return
+    } 
+     
     // await check('course_name').notEmpty().withMessage({
     //     message: 'Course name is required'
     // }).run(req);
@@ -39,12 +44,13 @@ exports.addCourse =  utils.wrapAsync(async function(req,res){
 	// 	});
 	// }else{
         try{
+            const image_name = await uploadImage(req,res)           
             const {body} = req;
             const data = await addCourse({...body,image_name});
             res.json({success:true,data});
         }catch(e){
-            let err = errorHandler.createError(e, 401, e);
-          //  throw err;
+            let err = errorHandler.createError(e, 500 , e);
+            res.status(err.statusCode).json(err)
         }        
    // }
 });

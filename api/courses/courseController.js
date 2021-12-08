@@ -24,27 +24,13 @@ const addCourse = async(body) => {
   return response;  
 };
 
-// const uploadImage = (req,res) => {
-//   const upload = multer({storage }).single('file');
-//   return new Promise((resolve,reject) => {
-//     upload(req,res,(err) => {
-//       if(err)
-//           reject(err);      
-//       resolve(req?.file?.filename)
-//     });
-//   });
-// }
-
 const uploadImage = (req,res) => {
   const uploadImg = upload.single('file')
   return new Promise((resolve,reject) => {
-    uploadImg(req,res,async(err) => {
+    uploadImg(req,res,async(err, data) => {
       if(err)
-        reject(err);      
-      resolve(req?.file?.filename)
-      console.log(res.file)
-     // const  response = await courseModel.create({photoUrl : req.file.location});
-     // return response;
+        return reject(err);      
+      resolve(req?.file?.location)
     });
   });
 }
