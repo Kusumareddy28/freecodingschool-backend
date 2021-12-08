@@ -115,7 +115,6 @@ class Helper {
     validateToken(token = ''){
 
         return new Promise((resolve, reject) => {
-
             if(token) {
 
                 jwt.verify(token, config.jwt_secret, (err, decoded) => {
@@ -150,7 +149,6 @@ class Helper {
                 });
 
             } else reject(new Error(config.error.message.tokenMissing));
-
         })
 
     }
