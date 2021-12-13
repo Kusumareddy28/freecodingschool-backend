@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const roles = ["TEACHER", "STUDENT","VOLUNTEER"];
+const roles = ["PARENT", "STUDENT","VOLUNTEER"];
 
 const testimonialSchema = new mongoose.Schema({
     email: { type: String, required: true,trim:true },  
